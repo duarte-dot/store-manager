@@ -42,5 +42,19 @@ describe('Products Services Tests', () => {
       expect(result).to.be.an('array');
       expect(result).to.have.length(1);
     });
+
+    it('createNewProduct', async () => {
+      sinon.stub(productsModels, 'createNewProduct').resolves({ id: 2, name: 'ProdutoZ' })
+
+      const result = await productsServices.createNewProduct({
+        name: 'ProdutoZ'
+      })
+
+      expect(result).to.be.an('object');
+      expect(result.name).to.be.equal('ProdutoZ');
+      expect(result.id).to.be.equal(2);
+    })
+
+    
   });
 });

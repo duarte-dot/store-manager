@@ -22,5 +22,5 @@ const getProductByID = [
 
 module.exports = {
   getAllProducts,
-  getProductByID
+  getProductByID,
 }

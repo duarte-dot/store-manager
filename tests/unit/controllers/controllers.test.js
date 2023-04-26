@@ -51,5 +51,31 @@ describe('Products Controllers Tests', () => {
 
       expect(res.status.calledOnceWith(200)).to.be.true;
     });
+
+    it('createNewProduct', async () => {
+      sinon.stub(productsServices, 'createNewProduct').resolves({
+        id: 2, name: 'ProdutoZ' ,
+      });
+
+      const req = {
+        body: {
+          name: 'ProdutoZ'
+        }
+      };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.createNewProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(201);
+      expect(res.json).to.have.been.calledWith({
+        id: 2,
+        name: 'ProdutoZ',
+      });
+
+
+    })
   });
 });
