@@ -19,7 +19,7 @@ describe('Products Models tests', () => {
       connection.execute.restore();
     });
     it('readProductByID', async () => {
-      sinon.stub(connection, 'execute').resolves([getProductByID]);
+      sinon.stub(connection, 'execute').resolves([[getProductByID]]);
 
       const result = await productsModel.readProductByID(1);
 
