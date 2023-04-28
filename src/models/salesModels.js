@@ -15,6 +15,7 @@ const createNewSaleDate = async () => {
 };
 
 const createNewSale = async ({ id, productId, quantity }) => {
+  if (id && productId && quantity) {
   await connection.execute(
     `INSERT INTO sales_products 
     (sale_id, product_id, quantity) 
@@ -22,6 +23,7 @@ const createNewSale = async ({ id, productId, quantity }) => {
     (?, ?, ?)`,
     [id, productId, quantity],
   );
+  }
 };
 
 module.exports = {

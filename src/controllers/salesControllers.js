@@ -8,7 +8,7 @@ const createNewSale = async (req, res) => {
     if (type) {
       return res.status(404).json({ message });
     }
-    // console.log(result);
+    
     return res.status(201).json({ id, itemsSold });
   } catch (error) {
     return res.status(500).json({ message: error.message });

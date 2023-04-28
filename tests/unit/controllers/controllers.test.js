@@ -8,11 +8,16 @@ const { expect } = chai;
 
 const productsControllers = require('../../../src/controllers/productsControllers');
 const productsServices = require('../../../src/services/productsServices');
+const saleControllers = require('../../../src/controllers/salesControllers');
+const saleServices = require('../../../src/services/salesServices');
+const saleModels = require('../../../src/models/salesModels');
 
 describe('Products Controllers Tests', () => {
+  afterEach(() => sinon.restore())
+
+
   describe('Sucess Case', () => {
-    afterEach(() => sinon.restore())
-    it('getAllProducts', async () => {
+    it('getAllProducts - should return a success response with the products', async () => {
       const req = {};
       const res = { status: sinon.stub(), json: sinon.stub() };
       const allProducts = [
@@ -38,7 +43,7 @@ describe('Products Controllers Tests', () => {
       expect(res.status.calledOnceWith(200)).to.be.true;
     });
 
-    it('getProductByID', async () => {
+    it('getProductByID - should return a success response with the product', async () => {
       const req = { params: { id: 1 } };
       const res = { status: sinon.stub(), json: sinon.stub() };
       const product = { id: 1, name: 'Martelo de Thor' };
@@ -52,7 +57,7 @@ describe('Products Controllers Tests', () => {
       expect(res.status.calledOnceWith(200)).to.be.true;
     });
 
-    it('createNewProduct', async () => {
+    it('createNewProduct - should return a success response with the created product', async () => {
       sinon.stub(productsServices, 'createNewProduct').resolves({
         id: 2, name: 'ProdutoZ' ,
       });
@@ -74,8 +79,112 @@ describe('Products Controllers Tests', () => {
         id: 2,
         name: 'ProdutoZ',
       });
-
-
     })
+
+    it('createNewSale - should return a success response with sale id and items sold', async () => {
+      sinon.stub(saleServices, 'createNewSale').resolves({
+        id: 3,
+        itemsSold: [
+          { productId: 1, quantity: 2 },
+          { productId: 2, quantity: 1 },
+        ]
+      });
+
+      const req = {
+        body: [
+          {
+            "productId": 1,
+            "quantity": 1
+          },
+          {
+            "productId": 2,
+            "quantity": 5
+          }
+        ]
+      };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.createNewSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(201);
+      expect(res.json).to.have.been.calledWith({
+        "id": 3,
+        "itemsSold": [
+          {
+            "productId": 1,
+            "quantity": 2
+          },
+          {
+            "productId": 2,
+            "quantity": 1
+          }
+        ]
+      });
+    });
   });
+
+  
+  describe('Fail cases', () => {
+    it('createNewSale - should return a error response when the productId doesnt exist', async () => {
+      sinon.stub(saleServices, 'createNewSale').resolves({
+        type: 'PRODUCT_NOT_FOUND',
+        message: 'Product not found'
+      });
+
+      const req = {
+        body: [
+          {
+            "productId": 999,
+            "quantity": 1
+          },
+          {
+            "productId": 1000,
+            "quantity": 5
+          }
+        ]
+      };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.createNewSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Product not found'
+      });
+    });
+
+    it('createNewSale - should return a error response if there was an internal error', async () => {
+      sinon.stub(saleServices, 'createNewSale').throws(new Error('Internal error creating sale'))
+
+      const req = {
+        body: [
+          {
+            "productId": 999,
+            "quantity": 1
+          },
+          {
+            "productId": 1000,
+            "quantity": 5
+          }
+        ]
+      };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.createNewSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(500);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Internal error creating sale'
+      });
+    });
+  })
 });
