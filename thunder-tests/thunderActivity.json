@@ -36,5 +36,61 @@
       "form": []
     },
     "tests": []
+  },
+  {
+    "_id": "33b83198-c4cc-41cb-88ee-a6c0ef5913e4",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://www.thunderclient.com/welcome",
+    "url": "https://www.thunderclient.com/welcome",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-04-28T16:55:46.249Z",
+    "modified": "2023-04-28T16:55:46.249Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "fb206a90-5c07-4bbb-874d-aaea1f822ff7",
+    "colId": "history",
+    "containerId": "",
+    "name": "id",
+    "url": "localhost:3001/sales/2",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-04-28T16:55:54.419Z",
+    "modified": "2023-04-28T18:13:38.602Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "aff0fc86-f5f7-46b6-bdf9-1e0ebaa9fe1f",
+    "colId": "history",
+    "containerId": "",
+    "name": "all sales",
+    "url": "localhost:3001/sales",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-04-28T17:14:49.723Z",
+    "modified": "2023-04-28T17:14:49.723Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "b404f4e1-f0c1-41cd-acea-a9559624c1fa",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost:3001/sales",
+    "url": "localhost:3001/sales",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-04-28T17:21:40.926Z",
+    "modified": "2023-04-28T17:21:40.926Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]

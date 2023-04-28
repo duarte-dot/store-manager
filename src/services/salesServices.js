@@ -1,5 +1,21 @@
 const salesModels = require('../models/salesModels');
 const productsModels = require('../models/productsModels');
+const { camelize } = require('../utils/helpers');
+
+const readAllSales = async () => {
+  const allSales = await salesModels.readAllSales();
+  return camelize(allSales);
+};
+
+const readSaleByID = async (id) => {
+  const saleFound = await salesModels.readSaleByID(id);
+
+  if (saleFound.length === 0) {
+    return { type: 404, message: 'Sale not found' };
+  }
+
+  return camelize(saleFound);
+};
 
 const createNewSale = async (sale) => {
   const verifySales = await Promise.all(
@@ -29,5 +45,7 @@ const createNewSale = async (sale) => {
 };
 
 module.exports = {
+  readSaleByID,
+  readAllSales,
   createNewSale,
 };

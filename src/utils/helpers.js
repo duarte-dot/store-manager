@@ -10,6 +10,15 @@ function formatDate() {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+const camelize = (data) => {
+  const camelData = data.map((item) => Object.keys(item).reduce((acc, key) => {
+    acc[key.replace(/_([a-z])/g, (m, c) => c.toUpperCase())] = item[key];
+    return acc;
+  }, {}));
+  return camelData;
+};
+
 module.exports = {
   formatDate,
+  camelize,
 };
