@@ -10,8 +10,7 @@ const { formatDate } = require('../utils/helpers');
 
 const createNewSaleDate = async () => {
   const date = formatDate();
-  const [{ insertId }] = await connection.execute('INSERT INTO sales (date) VALUES (?)',
-    [date]);
+  const [{ insertId }] = await connection.execute('INSERT INTO sales (date) VALUES (?)', [date]);
   return insertId;
 };
 
