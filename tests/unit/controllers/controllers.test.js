@@ -59,7 +59,7 @@ describe('Products Controllers Tests', () => {
 
     it('createNewProduct - should return a success response with the created product', async () => {
       sinon.stub(productsServices, 'createNewProduct').resolves({
-        id: 2, name: 'ProdutoZ' ,
+        id: 2, name: 'ProdutoZ',
       });
 
       const req = {
@@ -124,6 +124,86 @@ describe('Products Controllers Tests', () => {
         ]
       });
     });
+
+    it('readAllSales', async () => {
+      sinon.stub(saleServices, 'readAllSales').resolves([
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 1,
+          quantity: 5
+        },
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 2,
+          quantity: 10
+        },
+        {
+          saleId: 2,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]);
+
+      const req = {};
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.readAllSales(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+      expect(res.json).to.have.been.calledWith([
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 1,
+          quantity: 5
+        },
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 2,
+          quantity: 10
+        },
+        {
+          saleId: 2,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]);
+    })
+
+    it('readSaleByID', async () => {
+      sinon.stub(saleServices, 'readSaleByID').resolves([
+        {
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15,
+        }
+      ]);
+
+      const req = { params: { id: 2 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.readSaleByID(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+      expect(res.json).to.have.been.calledWith([
+        {
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]);
+    })
   });
 
   
@@ -186,5 +266,25 @@ describe('Products Controllers Tests', () => {
         message: 'Internal error creating sale'
       });
     });
-  })
+
+    it('readSaleByID - fail', async () => {
+      sinon.stub(saleServices, 'createNewSale').resolves({
+        type: 'SALE_NOT_FOUND',
+        message: 'Sale not found'
+      });
+
+      const req = { params: { id: 404 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.readSaleByID(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Sale not found'
+      });
+    });
+  });
 });

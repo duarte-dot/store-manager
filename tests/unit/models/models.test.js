@@ -95,20 +95,79 @@ describe('Sales Models Tests', () => {
       expect(connection.execute.calledOnceWithExactly('INSERT INTO sales (date) VALUES (?)', [formatDate()])).to.be.true;
       expect(id).to.equal(result.insertId);
     });
-  })
+
+    it('readAllSales', async () => {
+      const result = [
+        {
+          sale_id: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          product_id: 1,
+          quantity: 5
+        },
+        {
+          sale_id: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          product_id: 2,
+          quantity: 10
+        },
+        {
+          sale_id: 2,
+          date: '2023-04-28T18:36:01.000Z',
+          product_id: 3,
+          quantity: 15
+        }
+      ]
+
+      sinon.stub(connection, 'execute').resolves(result)
+
+      await salesModel.readAllSales();
+
+      expect(connection.execute.calledOnceWithExactly(`SELECT 
+    s.id sale_id, s.date, sp.product_id, sp.quantity
+FROM
+    sales s
+        JOIN
+    sales_products sp ON s.id = sp.sale_id
+ORDER BY sp.product_id;`)).to.be.true;
+    });
+
+    it('readSaleByID', async () => {
+      const result = [
+        {
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]
+
+      sinon.stub(connection, 'execute').resolves(result)
+
+      await salesModel.readSaleByID(2);
+
+      expect(connection.execute.calledOnceWithExactly(`SELECT 
+    s.date, sp.product_id, sp.quantity
+FROM
+    sales s
+        JOIN
+    sales_products sp ON s.id = sp.sale_id
+WHERE
+    s.id = ?
+ORDER BY sp.product_id;`, [2])).to.be.true;
+    });
+  });
 
 
   describe('Fail case', () => {
     it('createNewSale without sale', async () => {
-    sinon.stub(connection, 'execute').resolves({});
-    
-    const sale = {};
-    
-    await salesModel.createNewSale(sale);
-    
-    expect(connection.execute.calledOnce).to.be.false;
-    
-    connection.execute.restore();
-  })
+      sinon.stub(connection, 'execute').resolves({});
+      
+      const sale = {};
+      
+      await salesModel.createNewSale(sale);
+      
+      expect(connection.execute.calledOnce).to.be.false;
+      
+      connection.execute.restore();
+    })
   })
 })

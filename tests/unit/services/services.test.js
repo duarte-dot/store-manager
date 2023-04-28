@@ -81,6 +81,77 @@ describe('Products Services Tests', () => {
       expect(createNewSaleDateStub.calledOnce).to.be.true;
       expect(createNewSaleStub.calledTwice).to.be.true;
     });
+
+    it('readAllSales', async () => {
+      const salesModelsStub = sinon.stub(salesModels, 'readAllSales').resolves([
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 1,
+          quantity: 5
+        },
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 2,
+          quantity: 10
+        },
+        {
+          saleId: 2,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ])
+
+      const resultStub = [
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 1,
+          quantity: 5
+        },
+        {
+          saleId: 1,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 2,
+          quantity: 10
+        },
+        {
+          saleId: 2,
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]
+
+      const result = await salesServices.readAllSales();
+
+      expect(salesModelsStub.calledOnce).to.be.true;
+      expect(result).to.deep.equal(resultStub);
+    })
+
+    it('readSaleByID', async () => {
+      sinon.stub(salesModels, 'readSaleByID').resolves([
+        {
+          date: '2023-04-28T18:36:01.000Z',
+          product_id: 3,
+          quantity: 15
+        }
+      ]);
+
+      const resultStub = [
+        {
+          date: '2023-04-28T18:36:01.000Z',
+          productId: 3,
+          quantity: 15
+        }
+      ]
+
+      const result = await salesServices.readSaleByID(2)
+
+      expect(result).to.deep.equal(resultStub);
+    })
   });
 
 
@@ -103,5 +174,15 @@ describe('Products Services Tests', () => {
       });
       expect(readProductByIDStub.calledTwice).to.be.true;
     });
+
+    it('readSaleByID - should return "Sale not found" when there is no sales with that id', async () => {
+      sinon.stub(salesModels, 'readSaleByID').resolves([])
+
+      const resultStub = { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
+
+      const result = await salesServices.readSaleByID(404)
+
+      expect(result).to.deep.equal(resultStub);
+    })
   });
 });

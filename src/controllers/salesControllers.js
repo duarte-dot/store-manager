@@ -12,7 +12,6 @@ const readSaleByID = async (req, res) => {
   if (sale.type) {
     return res.status(404).json({ message: sale.message });
   }
-  
   return res.status(200).json(sale);
 };
 

@@ -11,9 +11,8 @@ const readSaleByID = async (id) => {
   const saleFound = await salesModels.readSaleByID(id);
 
   if (saleFound.length === 0) {
-    return { type: 404, message: 'Sale not found' };
+    return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
   }
-
   return camelize(saleFound);
 };
 
