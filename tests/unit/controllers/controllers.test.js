@@ -12,7 +12,7 @@ const saleControllers = require('../../../src/controllers/salesControllers');
 const saleServices = require('../../../src/services/salesServices');
 const saleModels = require('../../../src/models/salesModels');
 
-describe('Products Controllers Tests', () => {
+describe('Products & Sales Controllers Tests', () => {
   afterEach(() => sinon.restore())
 
 
@@ -204,6 +204,27 @@ describe('Products Controllers Tests', () => {
         }
       ]);
     })
+
+    it('updateProduct', async () => {
+      sinon.stub(productsServices, 'updateProduct').resolves({
+        id: 2,
+        name: 'banana',
+      });
+
+      const req = { params: { id: 2 }, body: { name: 'banana' } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.updateProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+      expect(res.json).to.have.been.calledWith({
+        id: 2,
+        name: 'banana',
+      });
+    })
   });
 
   
@@ -284,6 +305,26 @@ describe('Products Controllers Tests', () => {
       expect(res.status).to.have.been.calledWith(404);
       expect(res.json).to.have.been.calledWith({
         message: 'Sale not found'
+      });
+    });
+
+    it('updateProduct - fail', async () => {
+      sinon.stub(productsServices, 'updateProduct').resolves({
+        type: 'PRODUCT_NOT_FOUND',
+        message: 'Product not found',
+      });
+
+      const req = { params: { id: 404 }, body: { name: 'banana' } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.updateProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Product not found'
       });
     });
   });

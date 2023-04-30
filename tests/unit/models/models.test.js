@@ -51,6 +51,25 @@ describe('Products Models tests', () => {
 
       expect(result).to.be.an('object');
       expect(result).to.contain.keys(['id', 'name']);
+    });
+    
+    it('updateProduct', async () => {
+      sinon.stub(connection, 'execute').resolves([{
+        fieldCount: 0,
+        affectedRows: 1,
+        insertId: 0,
+        info: 'Rows matched: 1  Changed: 1  Warnings: 0',
+        serverStatus: 2,
+        warningStatus: 0,
+        changedRows: 1
+      }])
+
+      const result = await productsModel.updateProduct(2, "banana");
+
+      expect(connection.execute.args[0][0]).to.equal(
+        'UPDATE products SET name = ? WHERE id = ?;',
+      );
+      expect(connection.execute.args[0][1]).to.deep.equal(['banana', 2]);
     })
   });
 });
@@ -79,7 +98,7 @@ describe('Sales Models Tests', () => {
         `INSERT INTO sales_products 
     (sale_id, product_id, quantity) 
     VALUES
-    (?, ?, ?)`,
+    (?, ?, ?);`,
       );
       expect(connection.execute.args[0][1]).to.deep.equal([1, 2, 3]);
     });

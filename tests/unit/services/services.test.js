@@ -152,6 +152,23 @@ describe('Products Services Tests', () => {
 
       expect(result).to.deep.equal(resultStub);
     })
+
+    it('updateProduct', async () => {
+      sinon.stub(productsModels, 'updateProduct').resolves()
+
+      const id = 2
+      const name = 'banana'
+
+      const response = {
+        id,
+        name,
+      }
+
+      const result = await productsServices.updateProduct(id, name)
+
+      expect(result).to.be.an('object');
+      expect(result).to.deep.equal(response);
+    })
   });
 
 
@@ -183,6 +200,20 @@ describe('Products Services Tests', () => {
       const result = await salesServices.readSaleByID(404)
 
       expect(result).to.deep.equal(resultStub);
+    })
+
+    it('updateProduct - fail', async () => {
+      sinon.stub(productsModels, 'updateProduct').resolves()
+
+      const id = 404
+      const name = 'banana'
+
+      const response = { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' }
+
+      const result = await productsServices.updateProduct(id, name)
+
+      expect(result).to.be.an('object');
+      expect(result).to.deep.equal(response);
     })
   });
 });
