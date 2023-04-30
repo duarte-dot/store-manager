@@ -35,7 +35,7 @@ const createNewSale = async (sale) => {
 
   const itemsSold = sale.map(
     (product) => ({ productId: product.productId, quantity: product.quantity }),
-);
+  );
 
   return {
     id,
