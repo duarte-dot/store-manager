@@ -186,5 +186,19 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "63bab274-049e-427c-916c-d7c95eeb7a7e",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost:3001/sales/1",
+    "url": "localhost:3001/sales/5",
+    "method": "DELETE",
+    "sortNum": 0,
+    "created": "2023-05-02T20:40:51.062Z",
+    "modified": "2023-05-02T20:45:58.286Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]

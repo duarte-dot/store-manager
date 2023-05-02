@@ -9,5 +9,6 @@ const checkQuantityOnSale = require('../middlewares/checkQuantityOnSale');
 router.get('/', salesControllers.readAllSales);
 router.get('/:id', salesControllers.readSaleByID);
 router.post('/', checkProductIDOnSale, checkQuantityOnSale, salesControllers.createNewSale);
+router.delete('/:id', salesControllers.deleteSale);
 
 module.exports = router;

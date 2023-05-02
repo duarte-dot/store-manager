@@ -30,8 +30,22 @@ const createNewSale = async (req, res) => {
   }
 };
 
+const deleteSale = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await salesServices.deleteSale(id);
+
+    if (response.type) return res.status(404).json({ message: response.message });
+
+    return res.status(204).json({});
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   readAllSales,
   readSaleByID,
   createNewSale,
+  deleteSale,
 };

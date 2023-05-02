@@ -43,8 +43,19 @@ const createNewSale = async (sale) => {
   };
 };
 
+const deleteSale = async (id) => {
+  const sale = await readSaleByID(id);
+
+  if (sale.type) return { type: sale.type, message: sale.message };
+  
+  const response = await salesModels.deleteSale(id);
+
+  return response;
+};
+
 module.exports = {
   readSaleByID,
   readAllSales,
   createNewSale,
+  deleteSale,
 };

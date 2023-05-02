@@ -37,8 +37,6 @@ const deleteProduct = async (id) => {
   
   const response = await productsModels.deleteProduct(id);
 
-  console.log(response);
-
   return response;
 };
 
