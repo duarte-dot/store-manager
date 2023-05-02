@@ -29,8 +29,6 @@ ORDER BY sp.product_id;`, [id],
   return sale;
 };
 
-readAllSales();
-
 const createNewSaleDate = async () => {
   const date = formatDate();
   const [{ insertId }] = await connection.execute('INSERT INTO sales (date) VALUES (?)', [date]);
