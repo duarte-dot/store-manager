@@ -30,6 +30,23 @@ const createNewSale = async (req, res) => {
   }
 };
 
+const updateSale = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sale = req.body;
+
+    const response = await salesServices.updateSale(id, sale);
+
+    if (response.type) {
+      return res.status(404).json({ message: response.message });
+    }
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteSale = async (req, res) => {
   try {
     const { id } = req.params;
@@ -41,11 +58,12 @@ const deleteSale = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-};
+}; 
 
 module.exports = {
   readAllSales,
   readSaleByID,
   createNewSale,
+  updateSale,
   deleteSale,
 };

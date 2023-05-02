@@ -49,6 +49,22 @@ const createNewSale = async ({ id, productId, quantity }) => {
   }
 };
 
+const updateSale = async (updatedSale, id) => {
+  await connection.execute('DELETE FROM sales_products WHERE sale_id = ?', [id]);
+
+  await Promise.all(
+    updatedSale.map(async (sale) => {
+      await connection.execute(
+        `INSERT INTO sales_products
+        (sale_id, product_id, quantity)
+        VALUES
+        (?, ?, ?);`,
+        [id, sale.productId, sale.quantity],
+      );
+    }),
+  );
+};
+
 const deleteSale = async (id) => {
   if (id) {
     await connection.execute(
@@ -67,5 +83,6 @@ module.exports = {
   readSaleByID,
   createNewSale,
   createNewSaleDate,
+  updateSale,
   deleteSale,
 };

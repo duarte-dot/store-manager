@@ -43,6 +43,30 @@ const createNewSale = async (sale) => {
   };
 };
 
+const updateSale = async (id, updatedSale) => {
+  const sale = await readSaleByID(id);
+  if (sale.type) return { type: sale.type, message: sale.message };
+
+  const verifySales = await Promise.all(
+    updatedSale.map((product) => productsModels.readProductByID(product.productId)),
+  );
+
+  const validate = verifySales.some(
+    (s) => s === undefined || s.id === undefined || s.name === undefined,
+  );
+
+  if (validate) return { type: 'PRODUCT_NOT_FOUD', message: 'Product not found' };
+
+  await salesModels.updateSale(updatedSale, id);
+
+  const response = {
+    saleId: id,
+    itemsUpdated: updatedSale,
+  };
+
+  return response;
+};
+
 const deleteSale = async (id) => {
   const sale = await readSaleByID(id);
 
@@ -57,5 +81,6 @@ module.exports = {
   readSaleByID,
   readAllSales,
   createNewSale,
+  updateSale,
   deleteSale,
 };
