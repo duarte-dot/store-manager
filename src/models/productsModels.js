@@ -14,6 +14,14 @@ const readProductByID = async (id) => {
   return product;
 };
 
+const getProductsFromURLSearch = async (q) => {
+  const [selectedProducts] = await connection.execute(
+    'SELECT * FROM products WHERE name LIKE ?', [`%${q}%`],
+  );
+  
+  return selectedProducts;
+};
+
 const createNewProduct = async (name) => {
   const allProducts = await readAllProducts();
   const id = allProducts.length + 1;
@@ -47,6 +55,7 @@ const deleteProduct = async (id) => {
 module.exports = {
   readAllProducts,
   readProductByID,
+  getProductsFromURLSearch,
   createNewProduct,
   updateProduct,
   deleteProduct,

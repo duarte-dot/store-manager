@@ -7,6 +7,7 @@ const checkProductID = require('../middlewares/checkProductID');
 const checkProductName = require('../middlewares/checkProductName');
 
 router.get('/', productsControllers.getAllProducts);
+router.get('/search', productsControllers.getProductsFromURLSearch);
 router.get('/:id', checkProductID, productsControllers.getProductByID);
 router.post('/', checkProductName, productsControllers.createNewProduct);
 router.put('/:id', checkProductName, productsControllers.updateProduct);

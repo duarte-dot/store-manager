@@ -10,6 +10,16 @@ const readProductByID = async (id) => {
   return product;
 };
 
+const getProductsFromURLSearch = async (q) => {
+  if (!q) {
+    const allProducts = await productsModels.readAllProducts();
+    return allProducts;
+  }
+
+  const selectedProducts = await productsModels.getProductsFromURLSearch(q);
+  return selectedProducts;
+};
+
 const createNewProduct = async (name) => {
   const product = await productsModels.createNewProduct(name);
   return product;
@@ -43,6 +53,7 @@ const deleteProduct = async (id) => {
 module.exports = {
   readAllProducts,
   readProductByID,
+  getProductsFromURLSearch,
   createNewProduct,
   updateProduct,
   deleteProduct,
