@@ -64,16 +64,12 @@ const updateSale = async (updatedSale, id) => {
 };
 
 const deleteSale = async (id) => {
-  if (id) {
     await connection.execute(
       `DELETE sales, sales_products 
       FROM sales
       JOIN sales_products ON sales.id = sales_products.sale_id
       WHERE sales.id = ?;`, [id],
     );
-
-    return { message: 'deleted' };
-  }
 };
 
 module.exports = {

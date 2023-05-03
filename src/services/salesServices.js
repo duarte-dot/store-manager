@@ -13,6 +13,7 @@ const readSaleByID = async (id) => {
   if (saleFound.length === 0) {
     return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
   }
+
   return camelize(saleFound);
 };
 
@@ -44,8 +45,9 @@ const createNewSale = async (sale) => {
 };
 
 const updateSale = async (id, updatedSale) => {
-  const sale = await readSaleByID(id);
-  if (sale.type) return { type: sale.type, message: sale.message };
+  const sale = await salesModels.readSaleByID(id);
+
+  if (sale.length === 0) return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
 
   const verifySales = await Promise.all(
     updatedSale.map((product) => productsModels.readProductByID(product.productId)),
@@ -55,26 +57,24 @@ const updateSale = async (id, updatedSale) => {
     (s) => s === undefined || s.id === undefined || s.name === undefined,
   );
 
-  if (validate) return { type: 'PRODUCT_NOT_FOUD', message: 'Product not found' };
+  if (validate) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
 
   await salesModels.updateSale(updatedSale, id);
 
-  const response = {
+  return {
     saleId: id,
     itemsUpdated: updatedSale,
   };
-
-  return response;
 };
 
 const deleteSale = async (id) => {
-  const sale = await readSaleByID(id);
+  const sale = await salesModels.readSaleByID(id);
 
-  if (sale.type) return { type: sale.type, message: sale.message };
+  if (sale.length === 0) return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
   
-  const response = await salesModels.deleteSale(id);
+  await salesModels.deleteSale(id);
 
-  return response;
+  return { message: 'done' };
 };
 
 module.exports = {

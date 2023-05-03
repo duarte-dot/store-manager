@@ -26,9 +26,9 @@ const createNewProduct = async (name) => {
 };
 
 const updateProduct = async (id, name) => {
-  const product = await readProductByID(id);
+  const product = await productsModels.readProductByID(id);
 
-  if (!product) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+  if (product.length === 0) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
   
   await productsModels.updateProduct(id, name);
 
@@ -41,12 +41,11 @@ const updateProduct = async (id, name) => {
 };
 
 const deleteProduct = async (id) => {
-  const product = await readProductByID(id);
+  const product = await productsModels.readProductByID(id);
 
   if (!product) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
   
   const response = await productsModels.deleteProduct(id);
-
   return response;
 };
 

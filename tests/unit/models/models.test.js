@@ -64,13 +64,48 @@ describe('Products Models tests', () => {
         changedRows: 1
       }])
 
-      const result = await productsModel.updateProduct(2, "banana");
+      await productsModel.updateProduct(2, "banana");
 
       expect(connection.execute.args[0][0]).to.equal(
         'UPDATE products SET name = ? WHERE id = ?;',
       );
       expect(connection.execute.args[0][1]).to.deep.equal(['banana', 2]);
     })
+
+    it('deleteProduct', async () => {
+      sinon.stub(connection, 'execute').resolves([
+        {
+          fieldCount: 0,
+          affectedRows: 1,
+          insertId: 0,
+          info: '',
+          serverStatus: 2,
+          warningStatus: 0
+        }
+      ])
+
+      await productsModel.deleteProduct(1)
+
+      expect(connection.execute.args[0][0]).to.equal(
+        'DELETE FROM products WHERE id = ?',
+      );
+      expect(connection.execute.args[0][1]).to.deep.equal([1]);
+    });
+
+    it('getProductsFromURLSearch', async () => {
+      sinon.stub(connection, 'execute').resolves([{ id: 2, name: 'Traje de encolhimento' }])
+
+      const q = 'tra'
+
+      await productsModel.getProductsFromURLSearch(q)
+
+      expect(connection.execute.args[0][0]).to.equal(
+        'SELECT * FROM products WHERE name LIKE ?',
+      );
+      expect(connection.execute.args[0][1]).to.deep.equal(
+        [`%${q}%`]
+      );
+    });
   });
 });
 
@@ -173,20 +208,56 @@ WHERE
     s.id = ?
 ORDER BY sp.product_id;`, [2])).to.be.true;
     });
+
+    it('updateSale', async () => {
+      const updatedSale = [{ productId: 1, quantity: 10 }, { productId: 2, quantity: 5 }];
+      const id = 1;
+
+      const executeStub = sinon.stub(connection, 'execute').resolves([]);
+      await salesModel.updateSale(updatedSale, id);
+
+      expect(executeStub.callCount).to.equal(3);
+      expect(executeStub.getCall(0).args[0]).to.equal('DELETE FROM sales_products WHERE sale_id = ?');
+      expect(executeStub.getCall(0).args[1]).to.deep.equal([id]);
+      expect(executeStub.getCall(1).args[0]).to.equal(`INSERT INTO sales_products
+        (sale_id, product_id, quantity)
+        VALUES
+        (?, ?, ?);`);
+      expect(executeStub.getCall(1).args[1]).to.deep.equal([id, 1, 10]);
+      expect(executeStub.getCall(2).args[1]).to.deep.equal([id, 2, 5]);
+    });
+
+    it('deleteSale', async () => {
+      sinon.stub(connection, 'execute').resolves([{
+        fieldCount: 0,
+        affectedRows: 2,
+        insertId: 0,
+        info: '',
+        serverStatus: 2,
+        warningStatus: 0
+      }]);
+
+      await salesModel.deleteSale(1)
+
+      expect(connection.execute.calledOnceWithExactly(`DELETE sales, sales_products 
+      FROM sales
+      JOIN sales_products ON sales.id = sales_products.sale_id
+      WHERE sales.id = ?;`, [1])).to.be.true;
+    });
   });
+});
 
 
-  describe('Fail case', () => {
-    it('createNewSale without sale', async () => {
-      sinon.stub(connection, 'execute').resolves({});
+describe('Fail case', () => {
+  it('createNewSale without sale', async () => {
+    sinon.stub(connection, 'execute').resolves({});
       
-      const sale = {};
+    const sale = {};
       
-      await salesModel.createNewSale(sale);
+    await salesModel.createNewSale(sale);
       
-      expect(connection.execute.calledOnce).to.be.false;
+    expect(connection.execute.calledOnce).to.be.false;
       
-      connection.execute.restore();
-    })
-  })
-})
+    connection.execute.restore();
+  });
+});

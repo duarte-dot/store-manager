@@ -12,6 +12,7 @@ const readSaleByID = async (req, res) => {
   if (sale.type) {
     return res.status(404).json({ message: sale.message });
   }
+  
   return res.status(200).json(sale);
 };
 
@@ -48,16 +49,12 @@ const updateSale = async (req, res) => {
 };
 
 const deleteSale = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const response = await salesServices.deleteSale(id);
+  const { id } = req.params;
+  const response = await salesServices.deleteSale(id);
 
-    if (response.type) return res.status(404).json({ message: response.message });
+  if (response.type) return res.status(404).json({ message: response.message });
 
-    return res.status(204).json({});
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
+  return res.status(204).json({});
 }; 
 
 module.exports = {

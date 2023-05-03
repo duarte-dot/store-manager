@@ -10,7 +10,6 @@ const productsControllers = require('../../../src/controllers/productsController
 const productsServices = require('../../../src/services/productsServices');
 const saleControllers = require('../../../src/controllers/salesControllers');
 const saleServices = require('../../../src/services/salesServices');
-const saleModels = require('../../../src/models/salesModels');
 
 describe('Products & Sales Controllers Tests', () => {
   afterEach(() => sinon.restore())
@@ -224,6 +223,85 @@ describe('Products & Sales Controllers Tests', () => {
         id: 2,
         name: 'banana',
       });
+    });
+
+    it('getProductsFromURLSearch', async () => {
+      sinon.stub(productsServices, 'getProductsFromURLSearch').withArgs('tra').resolves([{ id: 2, name: 'Traje de encolhimento' }])
+
+      const req = { query: { q: 'Tra' } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.getProductsFromURLSearch(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+    })
+
+    it('deleteProduct', async () => {
+      sinon.stub(productsServices, 'deleteProduct').withArgs(1).resolves(
+        { message: 'deleted' }
+      )
+
+      const req = { params: { id: 1 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.deleteProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(204);
+    })
+
+    it('updateSale', async () => {
+      sinon.stub(saleServices, 'updateSale').withArgs(1, [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ]).resolves({
+        saleId: '1',
+        itemsUpdated: [{ productId: 1, quantity: 10 }, { productId: 2, quantity: 50 }]
+      });
+      
+      const req = { params: { id: 1 }, body: [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ] };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.updateSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+    })
+
+    it('deleteSale', async () => {
+      sinon.stub(saleServices, 'deleteSale').withArgs(1).resolves({ message: 'done' })
+
+      const req = { params: { id: 1 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.deleteSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(204);
     })
   });
 
@@ -289,7 +367,7 @@ describe('Products & Sales Controllers Tests', () => {
     });
 
     it('readSaleByID - fail', async () => {
-      sinon.stub(saleServices, 'createNewSale').resolves({
+      sinon.stub(saleServices, 'readSaleByID').resolves({
         type: 'SALE_NOT_FOUND',
         message: 'Sale not found'
       });
@@ -327,5 +405,108 @@ describe('Products & Sales Controllers Tests', () => {
         message: 'Product not found'
       });
     });
+
+    it('deleteProduct - fail', async () => {
+      sinon.stub(productsServices, 'deleteProduct').withArgs(1).resolves(
+        { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' }
+      )
+
+      const req = { params: { id: 1 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsControllers.deleteProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+    });
+
+    it('updateSale - fail product', async () => {
+      sinon.stub(saleServices, 'updateSale').withArgs(1, [
+        {
+          "productId": 202,
+          "quantity": 10
+        },
+        {
+          "productId": 303,
+          "quantity": 50
+        }
+      ]).resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+      
+      const req = { params: { id: 1 }, body: [
+        {
+          "productId": 202,
+          "quantity": 10
+        },
+        {
+          "productId": 303,
+          "quantity": 50
+        }
+      ] };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.updateSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Product not found'
+      });
+    })
+
+    it('updateSale - fail sale', async () => {
+      sinon.stub(saleServices, 'updateSale').withArgs(1, [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ]).resolves({ type: 'SALE_NOT_FOUND', message: 'Sale not found' });
+      
+      const req = { params: { id: 404 }, body: [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ] };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.updateSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Sale not found'
+      });
+    })
+
+    it('deleteSale', async () => {
+      sinon.stub(saleServices, 'deleteSale').withArgs(404).resolves({ type: 'SALE_NOT_FOUND', message: 'Sale not found' })
+
+      const req = { params: { id: 404 } };
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await saleControllers.deleteSale(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({
+        message: 'Sale not found'
+      });
+    })
   });
 });
