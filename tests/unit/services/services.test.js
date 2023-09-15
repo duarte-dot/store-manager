@@ -186,14 +186,13 @@ describe('Products Services Tests', () => {
     it('should update the sale and return the sale ID and updated items', async () => {
       sinon.stub(salesModels, 'readSaleByID').withArgs(2).resolves([{ date: '2023-05-03T15:27:02.000Z', productId: 3, quantity: 15 }]);
       sinon.stub(productsModels, 'readProductByID').withArgs(1).resolves({ id: 1, name: 'Product 1' });
-      sinon.stub(productsModels, 'readProductByID').withArgs(2).resolves({ id: 2, name: 'Product 2' });
       sinon.stub(salesModels, 'updateSale').withArgs([
         {
           productId: 1,
           quantity: 10
         },
         {
-          productId: 2,
+          productId: 1,
           quantity: 50
         }
       ], 2).resolves(undefined);
@@ -204,7 +203,7 @@ describe('Products Services Tests', () => {
           quantity: 10
         },
         {
-          productId: 2,
+          productId: 1,
           quantity: 50
         }
       ]);
@@ -218,7 +217,7 @@ describe('Products Services Tests', () => {
             quantity: 10
           },
           {
-            productId: 2,
+            productId: 1,
             quantity: 50
           },
         ]
@@ -329,7 +328,7 @@ describe('Products Services Tests', () => {
     })
 
     it('updateProduct', async () => {
-      sinon.stub(productsModels, 'readProductByID').withArgs(404).resolves([])
+      sinon.stub(productsModels, 'readProductByID').withArgs(404).resolves(undefined)
       sinon.stub(productsModels, 'updateProduct').resolves(undefined)
 
       const id = 404

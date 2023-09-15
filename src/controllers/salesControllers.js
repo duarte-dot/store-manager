@@ -32,7 +32,6 @@ const createNewSale = async (req, res) => {
 };
 
 const updateSale = async (req, res) => {
-  try {
     const { id } = req.params;
     const sale = req.body;
 
@@ -43,9 +42,6 @@ const updateSale = async (req, res) => {
     }
 
     return res.status(200).json(response);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
 };
 
 const deleteSale = async (req, res) => {

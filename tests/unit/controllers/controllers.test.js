@@ -458,7 +458,7 @@ describe('Products & Sales Controllers Tests', () => {
     })
 
     it('updateSale - fail sale', async () => {
-      sinon.stub(saleServices, 'updateSale').withArgs(1, [
+      sinon.stub(saleServices, 'updateSale').withArgs(404, [
         {
           "productId": 1,
           "quantity": 10
