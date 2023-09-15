@@ -28,7 +28,7 @@ const createNewProduct = async (name) => {
 const updateProduct = async (id, name) => {
   const product = await productsModels.readProductByID(id);
 
-  if (product.length === 0) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+  if (!product) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
   
   await productsModels.updateProduct(id, name);
 
