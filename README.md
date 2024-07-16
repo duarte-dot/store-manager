@@ -1,39 +1,39 @@
 # Store Manager 🏪
 
-Este projeto representa minha jornada de construção bem-sucedida de uma API RESTful de gerenciamento de vendas no formato dropshipping. Durante o desenvolvimento deste projeto, adquiri várias habilidades cruciais relacionadas ao desenvolvimento web e à criação de uma arquitetura robusta.
+This project represents my successful journey in building a dropshipping sales management RESTful API. Throughout the development of this project, I acquired various crucial skills related to web development and creating a robust architecture.
 
-## Principais Realizações
+## Key Achievements
 
-Aqui estão algumas das principais realizações e aprendizados que obtive durante este projeto:
+Here are some of the main achievements and learnings I gained during this project:
 
-### Arquitetura MSC (Model-Service-Controller)
+### MSC Architecture (Model-Service-Controller)
 
-- **Model**: Aprendi a criar a camada Model para lidar com o acesso e a manipulação de dados no banco de dados MySQL. Isso incluiu a implementação de funções como `findAll`, `findById`, `insert`, e mais. Também me concentrei em escrever testes unitários para garantir a confiabilidade dessas funções.
+- **Model**: I learned to create the Model layer to handle data access and manipulation in the MySQL database. This included implementing functions such as `findAll`, `findById`, `insert`, and more. I also focused on writing unit tests to ensure the reliability of these functions.
 
-- **Service**: Na camada Service, implementei a lógica de negócios da aplicação. Isso envolveu funções como `createProduct`, `createSale`, e outras, onde validei os dados usando o módulo Joi e criei contratos de retorno confiáveis. Mais uma vez, os testes unitários desempenharam um papel fundamental na garantia da integridade dessas funções.
+- **Service**: In the Service layer, I implemented the business logic of the application. This involved functions like `createProduct`, `createSale`, and others, where I validated data using the Joi module and created reliable return contracts. Once again, unit tests played a crucial role in ensuring the integrity of these functions.
 
-- **Controller**: Na camada Controller, mapeei as rotas para suas respectivas funções e lidei com as requisições HTTP. Isso incluiu funções como `listProducts`, `updateProduct`, e assim por diante. Aqui, também me concentrei em validações específicas da camada Controller e escrevi testes correspondentes.
+- **Controller**: In the Controller layer, I mapped routes to their respective functions and handled HTTP requests. This included functions like `listProducts`, `updateProduct`, and so on. Here, I also focused on specific validations in the Controller layer and wrote corresponding tests.
 
-### Banco de Dados MySQL e Docker
+### MySQL Database and Docker
 
-- Me familiarizei com a integração do Node.js com o banco de dados MySQL, permitindo a gestão eficiente de dados.
+- I became familiar with integrating Node.js with the MySQL database, enabling efficient data management.
 
-- Aprendi a utilizar o Docker e o docker-compose para criar ambientes de desenvolvimento com containers separados para a aplicação e o banco de dados.
+- I learned to use Docker and docker-compose to create development environments with separate containers for the application and the database.
 
-### Testes Unitários
+### Unit Testing
 
-- Desenvolvi uma sólida prática de escrever testes unitários para cada camada da aplicação, garantindo que as funcionalidades permanecessem confiáveis e livres de bugs.
+- I developed a solid practice of writing unit tests for each layer of the application, ensuring that functionalities remained reliable and bug-free.
 
-### Padrão REST
+### REST Pattern
 
-- Apliquei o padrão REST na construção da API, garantindo uma interface uniforme e intuitiva para interações com a aplicação.
+- I applied the REST pattern in building the API, ensuring a uniform and intuitive interface for interactions with the application.
 
-## Requisitos Atendidos
+## Requirements Met
 
-Durante a conclusão deste projeto, atendi a uma série de requisitos, demonstrando minha capacidade de criar uma aplicação robusta e altamente testada. Alguns dos requisitos incluem:
+During the completion of this project, I met a series of requirements, demonstrating my ability to create a robust and thoroughly tested application. Some of the requirements include:
 
-- Listagem de produtos e vendas.
-- Cadastro e validações de produtos e vendas.
-- Atualização e exclusão de produtos.
-- Pesquisa de produtos por termos.
-- Cobertura de testes unitários em várias camadas da aplicação.
+- Listing products and sales.
+- Registering and validating products and sales.
+- Updating and deleting products.
+- Searching products by terms.
+- Coverage of unit tests across various layers of the application.
